@@ -1,0 +1,13 @@
+[build]
+  publish = "."
+
+[[redirects]]
+  from = "/"
+  to = "/iMarket-Interactive-Documentation.html"
+  status = 200
+
+[[redirects]]
+  from = "/index.html"
+  to = "/iMarket-Interactive-Documentation.html"
+  status = 200
+
