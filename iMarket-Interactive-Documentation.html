@@ -4,7 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iMarket Platform - Interactive Documentation</title>
+    <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js" 
+            onerror="loadPDFLibraryFallback()"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        // Fallback CDN if primary fails
+        function loadPDFLibraryFallback() {
+            console.log('Primary CDN failed, trying fallback...');
+            const script = document.createElement('script');
+            script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+            script.onerror = function() {
+                console.error('All CDN sources failed to load html2pdf library');
+                alert('Failed to load PDF library. Please check your internet connection or try refreshing the page.');
+            };
+            document.head.appendChild(script);
+        }
+    </script>
     <style>
         * {
             margin: 0;
@@ -187,13 +202,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            transform: scale(0.7);
-            transform-origin: center;
-        }
-
-        .flowchart-container .mermaid svg {
-            max-width: 100%;
-            height: auto;
         }
 
         /* Flowchart Styles - HORIZONTAL COMPACT */
@@ -1349,7 +1357,6 @@
                 -webkit-overflow-scrolling: touch;
             }
             
-            
             .mermaid {
                 min-width: 600px;
             }
@@ -1370,7 +1377,6 @@
                 padding: 10px 5px;
             }
             
-            
             .mermaid {
                 min-width: 500px;
             }
@@ -1389,6 +1395,12 @@
         <p style="font-size: 1em; margin-top: 15px; opacity: 0.85;">A Complete Platform for Customers, Sellers, and Administrators</p>
     </div>
 
+    <!-- Search Container -->
+    <div class="search-container" id="searchContainer">
+        <input type="text" class="search-box" id="searchBox" placeholder="🔍 Search documentation... (Press / to focus)" />
+        <div class="search-results" id="searchResults"></div>
+    </div>
+
     <!-- Mobile Navigation -->
     <div class="sticky-toc">
         <select onchange="window.location.hash = this.value; document.querySelector(this.value).scrollIntoView({behavior: 'smooth'});">
@@ -1404,6 +1416,12 @@
             <option value="#roadmap">Development Roadmap</option>
         </select>
     </div>
+
+    <!-- Export Button -->
+    <center>
+        <button class="export-button" onclick="generatePDF()">📥 Download as PDF</button>
+        <button class="export-button" onclick="toggleSearch()" style="margin-left: 10px;">🔍 Search</button>
+    </center>
 
     <!-- Executive Summary Section -->
     <div class="section" id="executive">
@@ -1657,24 +1675,24 @@ graph TB
         <div class="flowchart-container">
             <div class="mermaid">
 graph TD
-    A["Browse Products"] --> B["Search & Filter"]
-    B --> C["View Product Details"]
-    C --> D{Add to Cart?}
-    D -->|Yes| E["Item Added"]
+    A["🏠 Browse"] --> B["🔍 Search"]
+    B --> C["📄 View"]
+    C --> D{Add?}
+    D -->|Yes| E["✅ Added"]
     D -->|No| A
-    E --> F{Continue Shopping?}
+    E --> F{More?}
     F -->|Yes| A
-    F -->|No| G["Shopping Cart"]
-    G --> H{Modify Cart?}
+    F -->|No| G["🛒 Cart"]
+    G --> H{Adjust?}
     H -->|Yes| G
-    H -->|No| I["Proceed to Checkout"]
-    I --> J["Select Shipping Address"]
-    J --> K["Choose Shipping Method"]
-    K --> L["Payment Processing"]
-    L --> M["Review Order Summary"]
-    M --> N{Confirm Order?}
+    H -->|No| I["💳 Checkout"]
+    I --> J["📍 Address"]
+    J --> K["🚚 Ship"]
+    K --> L["💰 Pay"]
+    L --> M["👁️ Review"]
+    M --> N{Confirm?}
     N -->|No| G
-    N -->|Yes| O["Order Placed"]
+    N -->|Yes| O["✅ Order"]
                     </div>
                     </div>
 
@@ -1682,34 +1700,34 @@ graph TD
         <div class="flowchart-container">
             <div class="mermaid">
 graph TD
-    A["Initiate Forward Shipping"] --> B["Access Platform"]
-    B --> C["Create Shipment Request"]
-    C --> D["Enter Order Details"]
-    D --> E["Select Source Marketplace"]
-    E --> F["Choose Consolidation Center"]
-    F --> G["Enter Delivery Address"]
-    G --> H["Place Order"]
-    H --> I["Payment Processing"]
-    I --> J{Payment Method?}
-    J -->|Credit Card| K["Card Payment"]
-    J -->|Bank Transfer| N["Upload Payment Proof"]
-    K --> L{Payment Approved?}
-    L -->|Yes| M["Payment Verified"]
+    A["🌐 Want Item"] --> B["📱 Open"]
+    B --> C["🚚 Request"]
+    C --> D["📝 Details"]
+    D --> E["🏪 Marketplace"]
+    E --> F["🏢 Center"]
+    F --> G["📍 Address"]
+    G --> H["🛍️ Order"]
+    H --> I["💰 Payment"]
+    I --> J{Method?}
+    J -->|Card| K["💳 Card"]
+    J -->|Bank| N["🏦 Screenshot"]
+    K --> L{Approved?}
+    L -->|Yes| M["✅ Verified"]
     L -->|No| I
-    N --> O["Draft Status"]
-    O --> P["Back Office Review"]
-    P --> Q{Payment Verified?}
+    N --> O["📋 DRAFT"]
+    O --> P["👨‍💼 Office"]
+    P --> Q{Verified?}
     Q -->|Yes| M
-    Q -->|No| R["Rejection Notification"]
-    M --> S["Shipment Approved"]
-    S --> T["Package Arrives at Center"]
-    T --> U["Quality Inspection"]
-    U --> V["Consolidation Process"]
-    V --> W["Customs Documentation"]
-    W --> X["Final Packaging"]
-    X --> Y["Dispatch to Carrier"]
-    Y --> Z["Out for Delivery"]
-    Z --> AA["Delivery Completed"]
+    Q -->|No| R["❌ Reject"]
+    M --> S["✅ Approved"]
+    S --> T["📦 Arrives"]
+    T --> U["🔍 Check"]
+    U --> V["🔄 Consolidate"]
+    V --> W["📄 Customs"]
+    W --> X["📦 Package"]
+    X --> Y["🚚 Ship"]
+    Y --> Z["📍 Deliver"]
+    Z --> AA["✅ Done"]
             </div>
         </div>
 
@@ -1841,14 +1859,14 @@ graph TD
         <div class="flowchart-container">
             <div class="mermaid">
 graph TB
-    A["Seller Registration"] --> B["Store Information"]
-    B --> C["Document Upload"]
-    C --> D["Bank Account Details"]
-    D --> E["Submit for Review"]
+    A["📝 Seller Signup"] --> B["🏪 Store Details"]
+    B --> C["📄 Upload Documents"]
+    C --> D["🏦 Bank Details"]
+    D --> E["✅ Submit Review"]
     E --> F{Admin Approval}
-    F -->|Approved| G["Account Activated"]
-    F -->|Rejected| H["Rejection Notification"]
-    G --> I["Product Listing Enabled"]
+    F -->|✅| G["🎉 Account Active"]
+    F -->|❌| H["📧 Rejection Email"]
+    G --> I["🚀 List Products"]
         </div>
         </div>
 
@@ -1856,17 +1874,17 @@ graph TB
         <div class="flowchart-container">
             <div class="mermaid">
 graph TB
-    A["Product Management"] --> B["Add New Product"]
-    A --> C["Edit Product"]
-    A --> D["Delete Product"]
-    A --> E["Toggle Visibility"]
-    B --> B1["Enter Product Details"]
-    B1 --> B2["Pending Approval"]
-    B2 --> B3{Admin Review}
-    B3 -->|Approved| B4["Product Published"]
-    B3 -->|Rejected| B5["Resubmission Required"]
-    C --> C1["Update Product Information"]
-    E --> E1["Active / Inactive Status"]
+    A["📦 Product Management"] --> B["➕ Add New"]
+    A --> C["✏️ Edit"]
+    A --> D["🗑️ Delete"]
+    A --> E["👁️ Toggle"]
+    B --> B1["📝 Enter Details"]
+    B1 --> B2["⏳ Pending"]
+    B2 --> B3{Admin Approval}
+    B3 -->|✅| B4["🎉 Live"]
+    B3 -->|❌| B5["📧 Resubmit"]
+    C --> C1["🔄 Update Fields"]
+    E --> E1["✅ Active / ❌ Inactive"]
                         </div>
                         </div>
 
@@ -1874,17 +1892,17 @@ graph TB
         <div class="flowchart-container">
             <div class="mermaid">
 graph TB
-    A["New Order Received"] --> B{Review Order}
-    B -->|Out of Stock| C["Cancel & Process Refund"]
-    B -->|Accept| D["Order Processing"]
-    D --> E["Pick & Pack Items"]
-    E --> F["Ready for Shipment"]
-    F --> G["Hand Over to Courier"]
-    G --> H["Order Shipped"]
-    H --> I["Customer Tracking"]
-    I --> J{Delivery Successful?}
-    J -->|Yes| K["Order Delivered"]
-    J -->|No| L["Retry Delivery"]
+    A["📋 New Order"] --> B{Review Order}
+    B -->|Out of Stock| C["❌ Cancel & Refund"]
+    B -->|Accept| D["✅ Processing"]
+    D --> E["📦 Pick & Pack"]
+    E --> F["✅ Ready to Ship"]
+    F --> G["🚚 Hand to Courier"]
+    G --> H["✅ Shipped"]
+    H --> I["📍 Customer Tracks"]
+    I --> J{Delivery OK?}
+    J -->|✅| K["✅ Delivered"]
+    J -->|❌| L["🔄 Retry"]
     L --> J
             </div>
         </div>
@@ -2044,16 +2062,16 @@ graph TB
         <div class="flowchart-container">
             <div class="mermaid">
 graph TB
-    A["Seller Pending Approval"] --> B["Admin Review"]
-    B --> C["Document Verification"]
-    C --> D{All Documents Valid?}
-    D -->|Yes| E["Approval Granted"]
-    D -->|No| F["Rejection Issued"]
-    E --> E1["Approval Notification"]
-    E1 --> E2["Dashboard Access Enabled"]
-    E2 --> E3["Product Listing Activated"]
-    F --> F1["Rejection Notification"]
-    F1 --> F2["Resubmission Allowed"]
+    A["📋 Seller Pending"] --> B["👁️ Admin Reviews"]
+    B --> C["🔍 Verify Documents"]
+    C --> D{All Valid?}
+    D -->|✅| E["✅ APPROVE"]
+    D -->|❌| F["❌ REJECT"]
+    E --> E1["📧 Approval Email"]
+    E1 --> E2["🎉 Dashboard Access"]
+    E2 --> E3["🚀 List Products"]
+    F --> F1["📧 Rejection Email"]
+    F1 --> F2["🔄 Reapply Later"]
             </div>
         </div>
 
@@ -2061,16 +2079,16 @@ graph TB
         <div class="flowchart-container">
             <div class="mermaid">
 graph TB
-    A["Pending Product Submission"] --> B["Admin Review"]
-    B --> C["Verification Checklist"]
-    C --> D{Passes All Checks?}
-    D -->|Yes| E["Product Approved"]
-    D -->|No| F["Product Rejected"]
-    E --> E1["Approval Notification"]
-    E1 --> E2["Product Published"]
-    E2 --> E3["Available in Search"]
-    F --> F1["Rejection Notification"]
-    F1 --> F2["Edit & Resubmit Required"]
+    A["📦 Pending Product"] --> B["👁️ Admin Reviews"]
+    B --> C["✅ Verification Checklist"]
+    C --> D{Passes Checks?}
+    D -->|✅| E["✅ APPROVE"]
+    D -->|❌| F["❌ REJECT"]
+    E --> E1["📧 Approval Email"]
+    E1 --> E2["🎉 Product Live"]
+    E2 --> E3["🔍 Visible in Search"]
+    F --> F1["📧 Rejection Email"]
+    F1 --> F2["📝 Edit & Resubmit"]
             </div>
         </div>
 
@@ -3090,9 +3108,399 @@ graph TB
 </div>
 
 <script>
+function generatePDF(event) {
+    // Show loading indicator first
+    let originalButton;
+    if (event && event.target) {
+        originalButton = event.target;
+    } else {
+        originalButton = document.querySelector('button[onclick*="generatePDF"]') || 
+                        document.querySelector('.export-button');
+    }
+    
+    const originalText = originalButton ? originalButton.innerHTML : '';
+    if (originalButton) {
+        originalButton.innerHTML = '⏳ Loading Library...';
+        originalButton.disabled = true;
+    }
+    
+    // Wait for library to load, then proceed
+    waitForPDFLibrary(15000)
+        .then(() => {
+            if (originalButton) {
+                originalButton.innerHTML = '⏳ Generating PDF...';
+            }
+            return generatePDFContent(originalButton, originalText);
+        })
+        .catch(error => {
+            console.error('PDF library loading error:', error);
+            if (originalButton) {
+                originalButton.innerHTML = '❌ Library Error';
+                originalButton.disabled = false;
+                setTimeout(() => {
+                    originalButton.innerHTML = originalText;
+                }, 3000);
+            }
+            alert('PDF library failed to load. Please:\n\n1. Check your internet connection\n2. Refresh the page\n3. Try a different browser\n\nIf the problem persists, the CDN might be blocked.');
+        });
+}
+
+function generatePDFContent(originalButton, originalText) {
+    
+    // Get the container element
+    const element = document.querySelector('.container');
+    if (!element) {
+        alert('Document container not found. Please refresh the page.');
+        if (originalButton) {
+            originalButton.innerHTML = originalText;
+            originalButton.disabled = false;
+        }
+        return Promise.reject(new Error('Container not found'));
+    }
+    
+    // Expand all accordion sections for PDF
+    document.querySelectorAll('.capability-card.collapsed').forEach(card => {
+        card.classList.remove('collapsed');
+    });
+    
+    // Generate filename with date
+    const today = new Date();
+    const dateStr = today.toISOString().split('T')[0];
+    const filename = `iMarket-Platform-Documentation-${dateStr}.pdf`;
+    
+    // Store original styles to restore later
+    const originalStyles = {
+        display: element.style.display,
+        visibility: element.style.visibility,
+        position: element.style.position,
+        overflow: element.style.overflow
+    };
+    
+    // Wait for Mermaid diagrams first, then generate PDF
+    return waitForMermaidDiagrams()
+        .then(() => {
+            // Wait a bit more for any animations and rendering
+            return new Promise(resolve => setTimeout(resolve, 1000));
+        })
+        .then(() => {
+            // Add PDF export mode class to body
+            document.body.classList.add('pdf-export-mode');
+            
+            // Ensure element is visible and has dimensions
+            element.style.display = 'block';
+            element.style.visibility = 'visible';
+            element.style.position = 'relative';
+            element.style.overflow = 'visible';
+            
+            // Scroll to top to ensure we capture from the beginning
+            window.scrollTo(0, 0);
+            
+            // Wait for scroll to complete
+            return new Promise(resolve => setTimeout(resolve, 300));
+        })
+        .then(() => {
+            // PDF options - Perfect for PDF export
+    const options = {
+                margin: [10, 10, 10, 10],
+                filename: filename,
+                image: { 
+                    type: 'jpeg', 
+                    quality: 0.98 
+                },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    letterRendering: true,
+                    allowTaint: true,
+                    backgroundColor: '#ffffff',
+                    scrollX: 0,
+                    scrollY: 0,
+                    windowWidth: 210 * 3.779527559, // A4 width in pixels at 96 DPI
+                    windowHeight: element.scrollHeight,
+                    width: 210 * 3.779527559,
+                    height: element.scrollHeight,
+                    x: 0,
+                    y: 0,
+                    removeContainer: false
+                },
+                jsPDF: { 
+                    orientation: 'portrait', 
+                    unit: 'mm', 
+                    format: 'a4',
+                    compress: true,
+                    precision: 2
+                },
+                pagebreak: { 
+                    mode: ['avoid-all', 'css', 'legacy'],
+                    before: '.page-break-before',
+                    after: '.page-break-after',
+                    avoid: [
+                        '.flowchart-container', 
+                        '.section', 
+                        '.capability-card',
+                        'table',
+                        '.grid-2',
+                        '.grid-3',
+                        '.grid-4'
+                    ]
+                }
+            };
+            
+            console.log('Starting PDF generation...');
+            console.log('Element dimensions:', {
+                width: element.scrollWidth,
+                height: element.scrollHeight,
+                offsetWidth: element.offsetWidth,
+                offsetHeight: element.offsetHeight
+            });
+            
+            // Generate PDF
+            return html2pdf()
+                .set(options)
+                .from(element)
+                .save();
+        })
+        .then(() => {
+            // Restore element styles
+            if (element) {
+                element.style.display = originalStyles.display;
+                element.style.visibility = originalStyles.visibility;
+                element.style.position = originalStyles.position;
+                element.style.overflow = originalStyles.overflow;
+            }
+            
+            // Remove PDF export mode class
+            document.body.classList.remove('pdf-export-mode');
+            
+            // Show success message
+            if (originalButton) {
+                originalButton.innerHTML = '✓ PDF Downloaded!';
+                setTimeout(() => {
+                    originalButton.innerHTML = originalText;
+                    originalButton.disabled = false;
+                }, 2000);
+            }
+        })
+            .catch(error => {
+                console.error('PDF generation error:', error);
+                console.error('Error details:', {
+                    message: error.message,
+                    name: error.name,
+                    html2pdfLoaded: typeof html2pdf !== 'undefined',
+                    elementFound: !!element
+                });
+                
+                // Restore element styles
+                if (element) {
+                    element.style.display = originalStyles.display;
+                    element.style.visibility = originalStyles.visibility;
+                    element.style.position = originalStyles.position;
+                    element.style.overflow = originalStyles.overflow;
+                }
+                
+                // Remove PDF export mode class
+                document.body.classList.remove('pdf-export-mode');
+                
+                if (originalButton) {
+                    originalButton.innerHTML = '❌ Error - Try Again';
+                    originalButton.disabled = false;
+                    setTimeout(() => {
+                        originalButton.innerHTML = originalText;
+                    }, 3000);
+                }
+                
+                // Show user-friendly error message
+                let errorMsg = 'PDF generation failed.\n\n';
+                if (error && error.message) {
+                    errorMsg += 'Error: ' + error.message + '\n\n';
+                }
+                errorMsg += 'Troubleshooting:\n';
+                errorMsg += '1. Open browser console (F12) for details\n';
+                errorMsg += '2. Ensure all content is fully loaded\n';
+                errorMsg += '3. Try refreshing the page\n';
+                errorMsg += '4. Check if browser pop-ups are blocked\n';
+                errorMsg += '5. Try a different browser';
+                
+                alert(errorMsg);
+                throw error; // Re-throw to propagate the error
+            });
+}
+
+// Wait for all Mermaid diagrams to be rendered
+function waitForMermaidDiagrams() {
+    return new Promise((resolve) => {
+        const mermaidElements = document.querySelectorAll('.mermaid');
+        if (mermaidElements.length === 0) {
+            resolve();
+            return;
+        }
+        
+        let loadedCount = 0;
+        const total = mermaidElements.length;
+        const maxWait = 10000; // 10 seconds max wait
+        const startTime = Date.now();
+        
+        const checkLoaded = () => {
+            loadedCount = 0;
+            mermaidElements.forEach(el => {
+                // Check if Mermaid has rendered (has SVG content)
+                if (el.querySelector('svg') || el.textContent.trim() === '') {
+                    loadedCount++;
+                }
+            });
+            
+            if (loadedCount === total || (Date.now() - startTime) > maxWait) {
+                resolve();
+            } else {
+                setTimeout(checkLoaded, 200);
+            }
+        };
+        
+        checkLoaded();
+    });
+}
+
+// Toggle Search
+function toggleSearch() {
+    const searchContainer = document.getElementById('searchContainer');
+    searchContainer.classList.toggle('active');
+    if (searchContainer.classList.contains('active')) {
+        document.getElementById('searchBox').focus();
+    }
+}
+
+// Search Functionality
+let searchIndex = [];
+function buildSearchIndex() {
+    const sections = document.querySelectorAll('.section h2, .section h3, .capability-card h4');
+    sections.forEach((section, index) => {
+        const text = section.textContent;
+        const id = section.id || section.closest('.section')?.id || `section-${index}`;
+        const element = section.closest('.section') || section;
+        searchIndex.push({ text, id, element });
+    });
+}
+
+function performSearch(query) {
+    const results = [];
+    const lowerQuery = query.toLowerCase();
+    
+    searchIndex.forEach(item => {
+        if (item.text.toLowerCase().includes(lowerQuery)) {
+            results.push(item);
+        }
+    });
+    
+    // Also search in capability cards
+    document.querySelectorAll('.capability-card').forEach(card => {
+        const text = card.textContent;
+        if (text.toLowerCase().includes(lowerQuery)) {
+            const h4 = card.querySelector('h4');
+            if (h4 && !results.find(r => r.element === card)) {
+                results.push({ text: h4.textContent, element: card, id: '' });
+            }
+        }
+    });
+    
+    return results;
+}
+
+function displaySearchResults(results) {
+    const resultsDiv = document.getElementById('searchResults');
+    if (results.length === 0) {
+        resultsDiv.innerHTML = '<div class="search-result-item">No results found</div>';
+        resultsDiv.classList.add('active');
+        return;
+    }
+    
+    resultsDiv.innerHTML = results.slice(0, 10).map((result, index) => {
+        const text = result.text.substring(0, 60) + (result.text.length > 60 ? '...' : '');
+        const targetId = result.id || (result.element ? `result-${index}` : '');
+        return `<div class="search-result-item" onclick="scrollToElement(this)" data-target="${targetId}" data-text="${result.text}">${text}</div>`;
+    }).join('');
+    resultsDiv.classList.add('active');
+}
+
+function scrollToElement(element) {
+    const targetId = element.getAttribute('data-target');
+    const searchText = element.getAttribute('data-text') || element.textContent.trim();
+    
+    let target = null;
+    if (targetId) {
+        target = document.querySelector(`#${targetId}`) || document.querySelector(targetId);
+    }
+    
+    if (!target) {
+        document.querySelectorAll('.section h2, .section h3, .capability-card h4').forEach(el => {
+            if (el.textContent.includes(searchText.substring(0, 30))) {
+                target = el.closest('.section') || el.closest('.capability-card') || el;
+            }
+        });
+    }
+    
+    if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.style.transition = 'background 0.3s';
+        target.style.background = '#fff3cd';
+        setTimeout(() => {
+            target.style.background = '';
+            setTimeout(() => target.style.transition = '', 300);
+        }, 2000);
+    }
+    
+    document.getElementById('searchResults').classList.remove('active');
+    document.getElementById('searchContainer').classList.remove('active');
+}
+
+// Keyboard shortcut for search
+document.addEventListener('keydown', function(e) {
+    if (e.key === '/' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        toggleSearch();
+    }
+    if (e.key === 'Escape') {
+        document.getElementById('searchContainer').classList.remove('active');
+        document.getElementById('searchResults').classList.remove('active');
+    }
+});
 
 // Initialize on page load
+// Wait for html2pdf library to load
+function waitForPDFLibrary(maxWait = 10000) {
+    return new Promise((resolve, reject) => {
+        if (typeof html2pdf !== 'undefined') {
+            resolve();
+            return;
+        }
+        
+        const startTime = Date.now();
+        const checkInterval = setInterval(() => {
+            if (typeof html2pdf !== 'undefined') {
+                clearInterval(checkInterval);
+                resolve();
+            } else if (Date.now() - startTime > maxWait) {
+                clearInterval(checkInterval);
+                reject(new Error('PDF library failed to load after ' + maxWait + 'ms'));
+            }
+        }, 100);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    buildSearchIndex();
+    const searchBox = document.getElementById('searchBox');
+    if (searchBox) {
+        searchBox.addEventListener('input', function(e) {
+            const query = e.target.value.trim();
+            if (query.length > 2) {
+                const results = performSearch(query);
+                displaySearchResults(results);
+            } else {
+                document.getElementById('searchResults').classList.remove('active');
+            }
+        });
+    }
     
     // Accordion functionality for capability cards
     document.querySelectorAll('.capability-card h4').forEach(header => {
